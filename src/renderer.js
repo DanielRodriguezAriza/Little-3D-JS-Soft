@@ -279,6 +279,7 @@ let indices = [
 ];
 
 let meshes = [
+	mesh(vertices, indices, vec3(0,0,1), vec3(-1.0, 0.0,  3.0)),
 	mesh(vertices, indices, vec3(1,0,0), vec3(-1.0, 0.0, 10.0)),
 	mesh(vertices, indices, vec3(0,1,0), vec3( 1.0, -1.0,  3.0)),
 ];
