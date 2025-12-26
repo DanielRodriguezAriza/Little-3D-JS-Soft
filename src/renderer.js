@@ -5,12 +5,21 @@ const POINT_SIZE = 10;
 const LINE_WIDTH = 5;
 
 // Setup canvas
-let canvas = document.getElementById("renderer_canvas");
-canvas.width = 800;
-canvas.height = 800;
+let renderer_canvas_color = document.getElementById("renderer_canvas_color");
+renderer_canvas_color.width = 800;
+renderer_canvas_color.height = 800;
+
+let renderer_canvas_depth = document.getElementById("renderer_canvas_depth");
+renderer_canvas_depth.width = 200;
+renderer_canvas_depth.height = 200;
 
 // Setup context
-let ctx = canvas.getContext("2d");
+let ctx_color = renderer_canvas_color.getContext("2d");
+let ctx_depth = renderer_canvas_depth.getContext("2d");
+
+// Canvas and context pointer vars
+var canvas;
+var ctx;
 
 // Constructors
 function vec2(px, py) {
@@ -308,6 +317,15 @@ let deltaTime = 1 / FPS;
 function renderFrame() {
 	angle += Math.PI * deltaTime;
 	
+	canvas = renderer_canvas_depth;
+	ctx = ctx_depth;
+	clear();
+	for(let i = 0; i < meshes.length; ++i) {
+		drawMesh(meshes[i].vertices, meshes[i].indices, vec3(1,1,1), meshes[i].position, angle);
+	}
+	
+	canvas = renderer_canvas_color;
+	ctx = ctx_color;
 	clear();
 	for(let i = 0; i < meshes.length; ++i) {
 		drawMesh(meshes[i].vertices, meshes[i].indices, meshes[i].color, meshes[i].position, angle);
@@ -322,3 +340,6 @@ function main() {
 }
 
 main();
+
+// TODO : Check the pixel at the corresponding coord on the depth canvas and use it as a mask to determine whether a surface should be drawn or not.
+// NOTE : The depth canvas is rendered at a smaller resolution since pixel by pixel ops are going to become expensive on the CPU implementation, so it's mostly just a hack to allow non convex surfaces to be properly rendered on the scene without wasting time sorting every single primitive...
