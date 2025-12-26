@@ -284,6 +284,23 @@ let meshes = [
 	mesh(vertices, indices, vec3(0,1,0), vec3( 1.0, -1.0,  3.0)),
 ];
 
+function compareDepth(a, b) {
+	// NOTE : In the future, this could be changed to sort by distance to camera, or just z if we change the coordinate system to be relative to cam.
+	// Anyway, the problem still stands about this being based on a per object basis rather than per polygon... not to mention that, even if it were
+	// per polygon, we would still have the problem of having no support for polygon intersections.
+	if(a.position.z < b.position.z) {
+		return 1;
+	}
+	if(a.position.z > b.position.z) {
+		return -1;
+	}
+	return 0;
+}
+function sortByDepth() {
+	// Simple object origin based painter's algorithm.
+	meshes.sort(compareDepth);
+}
+
 let FPS = 60; // 60;
 let rate = 1000 / FPS;
 let angle = 0;
@@ -300,6 +317,7 @@ function renderFrame() {
 }
 
 function main() {
+	sortByDepth();
 	setTimeout(renderFrame, rate);
 }
 
